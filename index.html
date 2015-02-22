@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>EncUtils</title>
+		<link rel="stylesheet" href="enc-utils.css">
+		<script src="https://raw.githubusercontent.com/cerosrhino/enc-utils/master/enc-utils.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>EncUtils</h1>
+			<h2>a Unicode and Base64 encoding utility</h2>
+			<nav>
+				<ul>
+					<li><a href="#about">About</a></li>
+					<li><a href="#usage">Usage</a></li>
+					<li><a href="#redistribution">Redistribution</a></li>
+					<li><a href="#download">Download</a></li>
+				</ul>
+			</nav>
+		</header>
+		<article>
+			<section id="about">
+				<h1>About</h1>
+				<p>EncUtils is a library for converting text into its various representations, such as UTF-8, UTF-16, UTF-32 and Base64. It started as a project supporting a web application that I created, the <a href="http://cerosrhino.github.io/transl8or/">Transl8or</a>. The application was not designed to work in ECMAScript 3 environments, however the library serving as its backend was created with ES3 compliance in mind - the old version (still available for download) works even in Internet Explorer 8 (well, with a polyfill for <code>Array.isArray()</code>).<br>
+				The most recent version uses typed arrays, and if your projects don't have to support older browsers, it is recommended that you use it. Both links are available in the <a href="#download">Download</a> section.</p>
+				<p>The library is a critical part of the application mentioned above, however I decided to release it as a separate project, as it may be of use to someone.</p>
+				<p>The tool is protected against:</p>
+				<ul>
+					<li>byte sequences resolving to code points reserved by UTF-16 for surrogate pairs</li>
+					<li>code points exceeding the Unicode limit (U+10FFFF)</li>
+					<li>overlong encoding (applies to UTF-8; refers to encoding a character using more bytes than required)</li>
+				</ul>
+			</section>
+			<section id="usage">
+				<h1>Usage</h1>
+				<p>EncUtils is included in this very page, open your console and give it a try!</p>
+				<p>There are 12 functions total in the library that you can utilize. They generally deal with strings and typed arrays (Uint8Array) of bytes (but they also accept plain arrays of numbers; if an extra argument is supplied, they also return regular arrays). If you feed one of the functions with an array of numbers exceeding 255 (or not being numbers at all), the function will silently do its best to convert every such value to a byte (which can be surprising).</p>
+				<p>The functions throw exceptions in some cases (e.g. when an invalid byte sequence is provided).</p>
+				<p>Here's a brief explanation of what each function does:</p>
+				<ul>
+					<li><code>EncUtils.strToUTF8()</code> converts a UTF-16 JavaScript string into a (typed) array of UTF-8 bytes</li>
+					<li><code>EncUtils.utf8ToStr()</code> does the reverse</li>
+					<li><code>EncUtils.strToUTF16BE()</code> converts a string to a (typed) array of bytes forming UTF-16 Big Endian sequences</li>
+					<li><code>EncUtils.utf16BEToStr()</code> does the reverse</li>
+					<li><code>EncUtils.strToUTF16LE()</code> - same as above, but uses Little Endian instead of Big Endian</li>
+					<li><code>EncUtils.utf16LEToStr()</code> does the reverse
+					<li><code>EncUtils.strToUTF32BE()</code> - do these still require explanations?</li>
+					<li><code>EncUtils.utf32BEToStr()</code></li>
+					<li><code>EncUtils.strToUTF32LE()</code></li>
+					<li><code>EncUtils.utf32LEToStr()</code></li>
+					<li><code>EncUtils.base64ToBytes()</code> converts a Base64 string into a (typed) array of bytes</li>
+					<li><code>EncUtils.bytesToBase64()</code> does the reverse</li>
+				</ul>
+				<p>Functions marked green accept two arguments: a UTF-16 encoded string and an optional boolean parameter which, when supplied and set to <code>true</code>, causes the function to return a regular array instead of a Uint8Array.<br>
+				The counterparts marked with red accept one argument which can be either a regular array comprised of numbers or a Uint8Array of bytes.</p>
+				<p>Here are some examples of actual use of the library:</p>
+				<div id="examples">
+					<code>EncUtils.strToUTF8('abc')<br>// returns a Uint8Array: [97, 98, 99]</code>
+					<code>EncUtils.strToUTF8('abc', true)<br>// returns a regular array: [97, 98, 99]</code>
+					<code>EncUtils.utf8ToStr(EncUtils.base64ToBytes('YWJj'))<br>// returns 'abc'</code>
+					<code>EncUtils.utf16BEToStr([0x01, 0x05]) // returns 'ą'</code>
+					<code>EncUtils.utf8ToStr([0xe0, 0x81, 0x81])<br>// throws an error - it is the capital letter A, but encoded using the so called overlong encoding</code>
+					<code>EncUtils.strToUTF8('\ud800lol')<br>// throws an error - UTF-16 high surrogate is not followed by low surrogate</code>
+				</div>
+				<p>Your turn! Try the above in your console or think up your own! Or, go straight to the <a href="#download">Download</a> section and make proper use of the tool!</p>
+			</section>
+			<section id="redistribution">
+				<h1>Redistribution</h1>
+				<p>You are encouraged to use this library and modify it to your liking.<br>
+				You should remember two things though:</p>
+				<ul>
+					<li>Always respect the <a href="https://github.com/cerosrhino/enc-utils/blob/master/LICENSE">license</a></li>
+					<li>It is highly recommended that you download the library and keep it on your own server</li>
+				</ul>
+			</section>
+			<section id="download">
+				<h1>Download</h1>
+				<p>Let's get straight to it! To download a script, right-click on the link and choose "Save as" (or, alternatively, click it and then hit Ctrl+S).</p>
+				<ul>
+					<li><a href="https://raw.githubusercontent.com/cerosrhino/enc-utils/master/enc-utils.js">EncUtils - modern version</a></li>
+					<li><a href="https://raw.githubusercontent.com/cerosrhino/enc-utils/master/enc-utils-es3.js">EncUtils - ES3-compliant version</a></li>
+				</ul>
+				<p><a href="https://github.com/cerosrhino/enc-utils">Visit the project page on GitHub</a></p>
+			</section>
+			<p>That's all there is to it! Have fun!</p>
+		</article>
+		<footer>
+			<p>Last update: 2015-02-22</p>
+			<p>Created and maintained by Witold Sieraczyński</p>
+		</footer>
+	</body>
+</html>

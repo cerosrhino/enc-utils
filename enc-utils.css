@@ -1,0 +1,107 @@
+@import url('http://fonts.googleapis.com/css?family=Maven+Pro:500');
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Maven Pro', 'Trebuchet MS', 'Helvetica', sans-serif; /* alternative fonts just in case */
+	font-size: 16px;
+}
+body {
+	width: 600px;
+	margin: 0 auto 40px;
+	border: 2px solid #000;
+	border-top: none;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	box-shadow: 0 0 10px #000;
+}
+header {
+	width: 500px;
+	margin: auto;
+	background-image: linear-gradient(to bottom, #00c, rgba(0, 0, 204, 0.5));
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	box-shadow: 0 0 10px #005;
+	text-shadow: 1px 1px #000;
+	overflow: hidden;
+}
+h1, h2 {
+	text-align: center;
+}
+header h1 {
+	font-size: 32px;
+	color: #fff;
+}
+header h2 {
+	font-size: 20px;
+	color: #fff;
+}
+nav ul {
+	list-style-type: none;
+	margin-top: 20px;
+}
+nav li {
+	float: left;
+	width: 125px;
+	text-align: center;
+}
+nav a {
+	display: block;
+	width: 125px;
+	color: #fff;
+	text-decoration: none;
+}
+nav a:hover {
+	background-image: linear-gradient(to bottom, rgba(204, 0, 0, 0.5), #c00);
+}
+article {
+	padding: 10px;
+	line-height: 150%;
+}
+article h1 {
+	margin: 10px 0;
+	font-size: 18px;
+}
+article ul {
+	margin-left: 50px;
+}
+code {
+	font-family: monospace;
+}
+section {
+	margin-top: 30px;
+}
+article > p {
+	margin: 40px 0 10px;
+	font-weight: bold;
+	text-align: center;
+}
+article a {
+	color: #00f;
+	text-decoration: none;
+}
+article a:hover {
+	text-decoration: underline;
+}
+#usage li:nth-child(odd) code {
+	color: #0b0;
+	font-weight: bold;
+}
+#usage li:nth-child(even) code {
+	color: #c00;
+	font-weight: bold;
+}
+#examples code {
+	display: block;
+	margin-bottom: 15px;
+}
+#examples code:first-child {
+	margin-top: 15px;
+}
+footer {
+	margin-top: 30px;
+	padding-right: 5px;
+	text-align: right;
+}
+footer p {
+	font-size: 15px;
+}
