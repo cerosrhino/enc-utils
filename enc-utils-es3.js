@@ -2,7 +2,7 @@
 *  UTF-8/UTF-16/UTF-32 and Base64 encoding utility        *
 *  Compatible with ECMAScript 3 environments              *
 *  Created by Witold Sieraczyński                         *
-*  https://github.com/cerosrhino/enc-utils                *
+*  http://cerosrhino.github.io/enc-utils/                 *
 **********************************************************/
 
 if (typeof Array.isArray === 'undefined') {

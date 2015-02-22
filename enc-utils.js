@@ -1,7 +1,7 @@
 /**********************************************************
 *  UTF-8/UTF-16/UTF-32 and Base64 encoding utility        *
 *  Created by Witold Sieraczyński                         *
-*  https://github.com/cerosrhino/enc-utils                *
+*  http://cerosrhino.github.io/enc-utils/                 *
 **********************************************************/
 
 var EncUtils = (function() {
