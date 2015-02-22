@@ -97,6 +97,10 @@ article a:hover {
 #examples code:first-child {
 	margin-top: 15px;
 }
+#download p:last-child {
+	margin-top: 20px;
+	text-align: center;
+}
 footer {
 	margin-top: 30px;
 	padding-right: 5px;
