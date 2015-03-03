@@ -10,10 +10,6 @@ var EncUtils = (function() {
 		utf16HRegex = /[\ud800-\udbff]([^\udc00-\udfff]|$)/,
 		utf16LRegex = /(^|[^\ud800-\udbff])[\udc00-\udfff]/;
 	
-	function isUint8Array(array) {
-		return Object.prototype.toString.call(array) === '[object Uint8Array]';
-	}
-	
 	function strToUTF16(str, littleEndian, array) {
 		if (typeof str !== 'string') {
 			throw new TypeError('This function accepts only strings as the argument');
@@ -44,16 +40,12 @@ var EncUtils = (function() {
 		return (array === true) ? bytes : new Uint8Array(bytes);
 	}
 	
-	function utf16ToStr(bytes, littleEndian) {
-		if (!isUint8Array(bytes) && !Array.isArray(bytes)) {
-			throw new TypeError('This function only accepts arguments of type Array or Uint8Array');
-		}
+	function utf16ToStr(bytes, littleEndian) {		
+		bytes = new Uint8Array(bytes);
 		
 		if (bytes.length % 2 !== 0) {
 			throw new Error('Incorrect number of bytes supplied');
 		}
-		
-		bytes = new Uint8Array(bytes);
 		
 		var str = '';
 		
@@ -111,15 +103,11 @@ var EncUtils = (function() {
 	}
 	
 	function utf32ToStr(bytes, littleEndian) {
-		if (!isUint8Array(bytes) && !Array.isArray(bytes)) {
-			throw new TypeError('This function only accepts arguments of type Array or Uint8Array');
-		}
+		bytes = new Uint8Array(bytes);
 		
 		if (bytes.length % 4 !== 0) {
 			throw new Error('Incorrect number of bytes supplied');
 		}
-		
-		bytes = new Uint8Array(bytes);
 		
 		var str = '';
 		
@@ -204,10 +192,6 @@ var EncUtils = (function() {
 			return (array === true) ? bytes : new Uint8Array(bytes);
 		},
 		utf8ToStr: function(bytes) {
-			if (!isUint8Array(bytes) && !Array.isArray(bytes)) {
-				throw new TypeError('This function only accepts arguments of type Array or Uint8Array');
-			}
-			
 			bytes = new Uint8Array(bytes);
 			
 			var str = '',
@@ -292,10 +276,6 @@ var EncUtils = (function() {
 			return utf32ToStr(bytes, true);
 		},
 		bytesToBase64: function(bytes) {
-			if (!isUint8Array(bytes) && !Array.isArray(bytes)) {
-				throw new TypeError('This function only accepts arguments of type Array or Uint8Array');
-			}
-			
 			bytes = new Uint8Array(bytes);
 			
 			var str = '';
