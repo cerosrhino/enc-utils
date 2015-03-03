@@ -40,7 +40,8 @@ var EncUtils = (function() {
 				bytes.push(high, low);
 			}
 		}
-		return array === true ? bytes : new Uint8Array(bytes);
+		
+		return (array === true) ? bytes : new Uint8Array(bytes);
 	}
 	
 	function utf16ToStr(bytes, littleEndian) {
@@ -106,7 +107,7 @@ var EncUtils = (function() {
 			}
 		}
 		
-		return array === true ? bytes : new Uint8Array(bytes);
+		return (array === true) ? bytes : new Uint8Array(bytes);
 	}
 	
 	function utf32ToStr(bytes, littleEndian) {
@@ -200,7 +201,7 @@ var EncUtils = (function() {
 				}
 			}
 			
-			return array === true ? bytes : new Uint8Array(bytes);
+			return (array === true) ? bytes : new Uint8Array(bytes);
 		},
 		utf8ToStr: function(bytes) {
 			if (!isUint8Array(bytes) && !Array.isArray(bytes)) {
@@ -384,7 +385,7 @@ var EncUtils = (function() {
 				bytes = bytes.concat(outputBytes);
 			}
 			
-			return array === true ? bytes : new Uint8Array(bytes);
+			return (array === true) ? bytes : new Uint8Array(bytes);
 		}
 	};
 })();
