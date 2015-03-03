@@ -1,7 +1,7 @@
 /**********************************************************
 *  UTF-8/UTF-16/UTF-32 and Base64 encoding utility        *
 *  Compatible with ECMAScript 3 environments              *
-*  Created by Witold Sieraczyński                         *
+*  Copyright (c) 2015 Witold Sieraczyński                 *
 *  http://cerosrhino.github.io/enc-utils/                 *
 **********************************************************/
 
