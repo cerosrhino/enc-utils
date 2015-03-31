@@ -1,9 +1,9 @@
-/**********************************************************
-*  UTF-8/UTF-16/UTF-32 and Base64 encoding utility        *
-*  Compatible with ECMAScript 3 environments              *
-*  Copyright (c) 2015 Witold Sieraczyński                 *
-*  http://cerosrhino.github.io/enc-utils/                 *
-**********************************************************/
+/****************************************************
+*  UTF-8/UTF-16/UTF-32 and Base64 encoding utility  *
+*  Compatible with ECMAScript 3 environments        *
+*  Copyright (c) 2015 Witold Sieraczyński           *
+*  https://cerosrhino.github.io/enc-utils/          *
+****************************************************/
 
 if (typeof Array.isArray === 'undefined') {
     Array.isArray = function(arg) {

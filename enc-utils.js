@@ -1,8 +1,8 @@
-/**********************************************************
-*  UTF-8/UTF-16/UTF-32 and Base64 encoding utility        *
-*  Copyright (c) 2015 Witold Sieraczyński                 *
-*  http://cerosrhino.github.io/enc-utils/                 *
-**********************************************************/
+/****************************************************
+*  UTF-8/UTF-16/UTF-32 and Base64 encoding utility  *
+*  Copyright (c) 2015 Witold Sieraczyński           *
+*  https://cerosrhino.github.io/enc-utils/          *
+****************************************************/
 
 var EncUtils = (function() {
     var base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
