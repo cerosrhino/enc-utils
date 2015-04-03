@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>JSEncUtils</title>
-		<link rel="stylesheet" href="enc-utils.css">
+		<link rel="stylesheet" href="style.css">
 		<script src="https://raw.githubusercontent.com/cerosrhino/js-enc-utils/master/enc-utils.js"></script>
 	</head>
 	<body>
@@ -34,7 +34,7 @@
 			</section>
 			<section id="usage">
 				<h1>Usage</h1>
-				<p>EncUtils is included in this very page, open your console and give it a try!<br>
+				<p>JSEncUtils is included in this very page, open your console and give it a try!<br>
 				There are 12 functions total in the library that you can utilize. They generally deal with strings and typed arrays (Uint8Array) of bytes (but they also accept plain arrays of numbers; if an extra argument is supplied, they also return regular arrays). If you feed one of the functions with an array of numbers exceeding 255 (or not being numbers at all), the function will silently do its best to convert every such value to a byte (which can be surprising).<br>
 				The functions throw exceptions in some cases (e.g. when an invalid byte sequence is provided).<br>
 				Here's a brief explanation of what each function does:</p>
