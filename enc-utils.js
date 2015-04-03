@@ -1,7 +1,7 @@
 /****************************************************
 *  UTF-8/UTF-16/UTF-32 and Base64 encoding utility  *
 *  Copyright (c) 2015 Witold Sieraczyński           *
-*  https://cerosrhino.github.io/enc-utils/          *
+*  https://cerosrhino.github.io/js-enc-utils/       *
 ****************************************************/
 
 var EncUtils = (function() {
