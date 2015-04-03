@@ -5,6 +5,8 @@
 ****************************************************/
 
 var EncUtils = (function() {
+    'use strict';
+    
     var base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
         base64Regex = /[^0-9a-z\+\/=]/i,
         utf16HRegex = /[\ud800-\udbff]([^\udc00-\udfff]|$)/,
@@ -140,7 +142,7 @@ var EncUtils = (function() {
         return str;
     }
     
-    return {
+    var retObj = {
         strToUTF8: function(str, array) {
             if (typeof str !== 'string') {
                 throw new TypeError('This function accepts only strings as the argument');
@@ -368,8 +370,10 @@ var EncUtils = (function() {
             return (array === true) ? bytes : new Uint8Array(bytes);
         }
     };
+    
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+        module.exports = retObj;
+    } else {
+        return retObj;
+    }
 })();
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = EncUtils;
-}
