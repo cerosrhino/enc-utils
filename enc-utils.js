@@ -4,17 +4,16 @@
 *  https://cerosrhino.github.io/js-enc-utils/       *
 ****************************************************/
 
-var EncUtils = (function() {
+(function() {
     'use strict';
     
-    var base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
-        base64Regex = /[^0-9a-z\+\/=]/i,
+    var EncUtils,
         utf16HRegex = /[\ud800-\udbff]([^\udc00-\udfff]|$)/,
         utf16LRegex = /(^|[^\ud800-\udbff])[\udc00-\udfff]/;
     
     function strToUTF16(str, littleEndian, array) {
         if (typeof str !== 'string') {
-            throw new TypeError('This function accepts only strings as the argument');
+            throw new TypeError('Not a string');
         }
         
         if (utf16HRegex.test(str)) {
@@ -74,7 +73,7 @@ var EncUtils = (function() {
     
     function strToUTF32(str, littleEndian, array) {
         if (typeof str !== 'string') {
-            throw new TypeError('This function accepts only strings as the argument');
+            throw new TypeError('Not a string');
         }
         
         var bytes = [];
@@ -142,10 +141,10 @@ var EncUtils = (function() {
         return str;
     }
     
-    var retObj = {
+    EncUtils = {
         strToUTF8: function(str, array) {
             if (typeof str !== 'string') {
-                throw new TypeError('This function accepts only strings as the argument');
+                throw new TypeError('Not a string');
             }
             
             var bytes = [];
@@ -282,89 +281,23 @@ var EncUtils = (function() {
             
             var str = '';
             
-            for (var i = 0; i < bytes.length; i += 3) {
-                var b64;
-                if (bytes.length - i === 1) {
-                    b64 = [
-                        (bytes[i] & 0xfc) >> 2,
-                        (bytes[i] & 0x03) << 4
-                    ];
-                } else if (bytes.length - i === 2) {
-                    b64 = [
-                        (bytes[i] & 0xfc) >> 2,
-                        ((bytes[i] & 0x03) << 4) | (bytes[i + 1] >> 4),
-                        (bytes[i + 1] & 0x0f) << 2
-                    ];
-                } else {
-                    b64 = [
-                        (bytes[i] & 0xfc) >> 2,
-                        ((bytes[i] & 0x03) << 4) | (bytes[i + 1] >> 4),
-                        ((bytes[i + 1] & 0x0f) << 2) | (bytes[i + 2] >> 6),
-                        bytes[i + 2] & 0x3f
-                    ];
-                }
-                
-                for (var j = 0; j < b64.length; j++) {
-                    str += base64Chars.charAt(b64[j]);
-                }
-                
-                if (b64.length === 2) {
-                    str += '==';
-                } else if (b64.length === 3) {
-                    str += '=';
-                }
+            for (var i = 0; i < bytes.length; i++) {
+                str += String.fromCharCode(bytes[i]);
             }
             
-            return str;
+            return btoa(str);
         },
         base64ToBytes: function(str, array) {
             if (typeof str !== 'string') {
-                throw new TypeError('This function accepts only strings as the argument');
+                throw new TypeError('Not a string');
             }
             
-            if (str.length % 4 !== 0) {
-                throw new Error('The length of the string argument must be divisible by four');
-            }
-            
-            if (base64Regex.test(str)) {
-                base64Regex.lastIndex = 0;
-                throw new Error('Illegal character found');
-            }
+            str = atob(str);
             
             var bytes = [];
             
-            for (var i = 0; i < str.length; i += 4) {
-                var outputBytes,
-                b64 = [];
-                
-                for (var j = i; j < i + 4; j++) {
-                    b64.push(base64Chars.indexOf(str.charAt(j)));
-                }
-                
-                if (b64[0] === 64 || b64[1] === 64) {
-                    throw new Error('The "=" character cannot appear as first or second in a Base64 sequence');
-                }
-                
-                if (b64[3] === 64) {
-                    if (b64[2] === 64) {
-                        outputBytes = [
-                            (b64[0] << 2) | (b64[1] >> 4)
-                        ];
-                    } else {
-                        outputBytes = [
-                            (b64[0] << 2) | (b64[1] >> 4),
-                            ((b64[1] & 0x0f) << 4) | (b64[2] >> 2)
-                        ];
-                    }
-                } else {
-                    outputBytes = [
-                        (b64[0] << 2) | ((b64[1] & 0x30) >> 4),
-                        ((b64[1] & 0x0f) << 4) | ((b64[2] & 0x3c) >> 2),
-                        ((b64[2] & 0x03) << 6) | b64[3]
-                    ];
-                }
-                
-                bytes = bytes.concat(outputBytes);
+            for (var i = 0; i < str.length; i++) {
+                bytes.push(str.charCodeAt(i));
             }
             
             return (array === true) ? bytes : new Uint8Array(bytes);
@@ -372,8 +305,8 @@ var EncUtils = (function() {
     };
     
     if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-        module.exports = retObj;
+        module.exports = EncUtils;
     } else {
-        return retObj;
+        window.EncUtils = EncUtils;
     }
 })();
