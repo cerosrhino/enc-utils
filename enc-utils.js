@@ -277,28 +277,18 @@
             return utf32ToStr(bytes, true);
         },
         bytesToBase64: function(bytes) {
-            bytes = new Uint8Array(bytes);
-            
-            var str = '';
-            
-            for (var i = 0; i < bytes.length; i++) {
-                str += String.fromCharCode(bytes[i]);
-            }
-            
-            return btoa(str);
+            return btoa([].reduce.call(new Uint8Array(bytes), function(prev, cur) {
+                return prev + String.fromCharCode(cur);
+            }, ''));
         },
         base64ToBytes: function(str, array) {
             if (typeof str !== 'string') {
                 throw new TypeError('Not a string');
             }
             
-            str = atob(str);
-            
-            var bytes = [];
-            
-            for (var i = 0; i < str.length; i++) {
-                bytes.push(str.charCodeAt(i));
-            }
+            var bytes = [].map.call(atob(str), function(el) {
+                return el.charCodeAt(0);
+            });
             
             return (array === true) ? bytes : new Uint8Array(bytes);
         }
