@@ -56,7 +56,7 @@
             throw new Error('UTF-16 high surrogate not followed by low surrogate');
         } else if (utf16Low.test(str)) {
             utf16Low.lastIndex = 0;
-            throw new Error('Unexpected UTF-16 low surrogate');
+            throw new Error('UTF-16 low surrogate not preceded by high surrogate');
         }
         
         return str;
@@ -148,7 +148,7 @@
                             throw new Error('UTF-16 high surrogate not followed by low surrogate');
                         }
                     } else if (code >= 0xdc00 && code <= 0xdfff) {
-                        throw new Error('Unexpected UTF-16 low surrogate');
+                        throw new Error('UTF-16 low surrogate not preceded by high surrogate');
                     }
                     
                     var length;
