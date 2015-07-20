@@ -35,7 +35,7 @@
 			<section id="usage">
 				<h1>Usage</h1>
 				<p>JSEncUtils is included in this very page, open your console and give it a try!<br>
-				There are 12 functions total in the library that you can utilize. They generally deal with strings and typed arrays (Uint8Array) of bytes (but they also accept/return plain arrays of numbers, should one wish to use those). If you feed one of the functions with an array of numbers exceeding 255 (or not being numbers at all), the function will silently do its best to convert every such value to a byte (which can be surprising).<br>
+				There are 12 functions total in the library that you can utilize. They generally deal with strings and typed arrays (Uint8Array) of bytes (but they also accept plain arrays of numbers, should one wish to use those). If you feed one of the functions with an array of numbers exceeding 255 (or not being numbers at all), the function will silently do its best to convert every such value to a byte (which can be surprising).<br>
 				The functions throw exceptions in some cases (e.g. when an invalid byte sequence is provided).<br>
 				Here's a brief explanation of what each function does:</p>
 				<ul>
@@ -52,12 +52,11 @@
 					<li><code>EncUtils.base64ToBytes()</code> converts a Base64 string into a (typed) array of bytes</li>
 					<li><code>EncUtils.bytesToBase64()</code> does the reverse</li>
 				</ul>
-				<p>Functions marked green accept two arguments: a UTF-16 encoded string and an optional boolean parameter which, when supplied and set to <code>true</code>, causes the function to return a regular array instead of a Uint8Array.<br>
-				The counterparts marked with red accept one argument which can be either a regular array comprised of numbers or a Uint8Array of bytes.<br>
+				<p>Functions marked green accept one argument, a UTF-16 encoded string.<br>
+				The counterparts marked with red are to be fed with a single argument too: either a regular array comprised of numbers or a Uint8Array of bytes.<br>
 				Here are some examples of actual use of the library:</p>
 				<div id="examples">
 					<code>EncUtils.strToUTF8('abc')<br>// returns a Uint8Array: [97, 98, 99]</code>
-					<code>EncUtils.strToUTF8('abc', true)<br>// returns a regular array: [97, 98, 99]</code>
 					<code>EncUtils.utf8ToStr(EncUtils.base64ToBytes('YWJj'))<br>// returns 'abc'</code>
 					<code>EncUtils.utf16BEToStr([0x01, 0x05]) // returns 'ą'</code>
 					<code>EncUtils.utf8ToStr([0xe0, 0x81, 0x81])<br>// throws an error - it is the capital letter A, but encoded using the so called overlong encoding</code>
@@ -86,7 +85,7 @@
 			<p>That's all there is to it! Have fun!</p>
 		</article>
 		<footer>
-			<p>Last update: 2015-07-18<br>
+			<p>Last update: 2015-07-20<br>
 			Created and maintained by Witold Sieraczyński</p>
 		</footer>
 	</body>

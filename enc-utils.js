@@ -8,77 +8,70 @@
     'use strict';
     
     var EncUtils,
-        utf16HRegex = /[\ud800-\udbff]([^\udc00-\udfff]|$)/,
-        utf16LRegex = /(^|[^\ud800-\udbff])[\udc00-\udfff]/;
+        utf16CodePoint = /[\ud800-\udbff][\udc00-\udfff]/g,
+        utf16High = /[\ud800-\udbff]([^\udc00-\udfff]|$)/,
+        utf16Low = /(^|[^\ud800-\udbff])[\udc00-\udfff]/;
     
-    function strToUTF16(str, littleEndian, array) {
+    function strToUTF16(str, littleEndian) {
         if (typeof str !== 'string') {
             throw new TypeError('Not a string');
         }
         
-        if (utf16HRegex.test(str)) {
-            utf16HRegex.lastIndex = 0;
+        if (utf16High.test(str)) {
+            utf16High.lastIndex = 0;
             throw new Error('UTF-16 high surrogate not followed by low surrogate');
-        } else if (utf16LRegex.test(str)) {
-            utf16LRegex.lastIndex = 0;
-            throw new Error('Unexpected UTF-16 low surrogate');
+        } else if (utf16Low.test(str)) {
+            utf16Low.lastIndex = 0;
+            throw new Error('UTF-16 low surrogate not preceded by high surrogate');
         }
         
-        var bytes = [];
+        var buf = new ArrayBuffer(str.length * 2),
+            bytes = new Uint8Array(buf),
+            view = new DataView(buf);
         
-        for (var i = 0; i < str.length; i++) {
-            var code = str.charCodeAt(i),
-                high = code >> 8,
-                low = code & 0xff;
-            
-            if (littleEndian === true) {
-                bytes.push(low, high);
-            } else {
-                bytes.push(high, low);
-            }
-        }
+        [].forEach.call(str, function(el, i) {
+            view.setUint16(i * 2, el.charCodeAt(0), littleEndian === true);
+        });
         
-        return (array === true) ? bytes : new Uint8Array(bytes);
+        return bytes;
     }
     
-    function utf16ToStr(bytes, littleEndian) {        
-        bytes = new Uint8Array(bytes);
-        
+    function utf16ToStr(bytes, littleEndian) {
         if (bytes.length % 2 !== 0) {
             throw new Error('Incorrect number of bytes supplied');
         }
         
-        var str = '';
+        var buf = new ArrayBuffer(bytes.length),
+            view = new DataView(buf);
+        (new Uint8Array(bytes)).forEach(function(el, i) {
+            view.setUint8(i, el);
+        });
         
-        for (var i = 0; i < bytes.length; i += 2) {
-            var code;
-            if (littleEndian === true) {
-                code = (bytes[i + 1] << 8) | bytes[i];
-            } else {
-                code = (bytes[i] << 8) | bytes[i + 1];
-            }
-            str += String.fromCharCode(code);
-        }
+        var str = (new Uint16Array(buf)).reduce(function(prev, cur, i) {
+            return prev + String.fromCharCode(view.getUint16(i * 2, littleEndian));
+        }, '');
         
-        if (utf16HRegex.test(str)) {
-            utf16HRegex.lastIndex = 0;
+        if (utf16High.test(str)) {
+            utf16High.lastIndex = 0;
             throw new Error('UTF-16 high surrogate not followed by low surrogate');
-        } else if (utf16LRegex.test(str)) {
-            utf16LRegex.lastIndex = 0;
+        } else if (utf16Low.test(str)) {
+            utf16Low.lastIndex = 0;
             throw new Error('Unexpected UTF-16 low surrogate');
         }
         
         return str;
     }
     
-    function strToUTF32(str, littleEndian, array) {
+    function strToUTF32(str, littleEndian) {
         if (typeof str !== 'string') {
             throw new TypeError('Not a string');
         }
         
-        var bytes = [];
+        var buf = new ArrayBuffer(str.replace(utf16CodePoint, ' ').length * 4),
+            bytes = new Uint8Array(buf),
+            view = new DataView(buf);
         
-        for (var i = 0; i < str.length; i++) {
+        for (var i = 0, j = 0; i < str.length; i++, j++) {
             var code = str.charCodeAt(i);
             if (code >= 0xd800 && code <= 0xdbff) {
                 if (i < str.length - 1) {
@@ -93,56 +86,44 @@
                     throw new Error('UTF-16 high surrogate not followed by low surrogate');
                 }
             }
-            if (littleEndian === true) {
-                bytes.push(code & 0xff, (code >> 8) & 0xff, code >> 16, 0);
-            } else {
-                bytes.push(0, code >> 16, (code >> 8) & 0xff, code & 0xff);
-            }
+            view.setUint32(j * 4, code, littleEndian === true);
         }
         
-        return (array === true) ? bytes : new Uint8Array(bytes);
+        return bytes;
     }
     
     function utf32ToStr(bytes, littleEndian) {
-        bytes = new Uint8Array(bytes);
-        
         if (bytes.length % 4 !== 0) {
             throw new Error('Incorrect number of bytes supplied');
         }
         
-        var str = '';
+        var buf = new ArrayBuffer(bytes.length),
+            view = new DataView(buf);
+        (new Uint8Array(bytes)).forEach(function(el, i) {
+            view.setUint8(i, el);
+        });
         
-        for (var i = 0; i < bytes.length; i += 4) {
-            var code;
-            if (littleEndian === true) {
-                if (bytes[i + 3] !== 0) {
-                    throw new Error('Invalid UTF-32 sequence');
-                }
-                code = (bytes[i + 2] << 16) | (bytes[i + 1] << 8) | bytes[i];
-            } else {
-                if (bytes[i] !== 0) {
-                    throw new Error('Invalid UTF-32 sequence');
-                }
-                code = (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | bytes[i + 3];
-            }
+        return (new Uint32Array(buf)).reduce(function(prev, cur, i) {
+            var code = view.getUint32(i * 4, littleEndian === true),
+                str;
+            
             if (code <= 0xffff) {
                 if (code >= 0xd800 && code <= 0xdfff) {
                     throw new Error('Found code point reserved by UTF-16 for surrogate pairs');
                 }
-                str += String.fromCharCode(code);
+                str = String.fromCharCode(code);
             } else if (code > 0x10ffff) {
                 throw new RangeError('Code point exceeds allowed limit (U+10FFFF)');
             } else {
                 code -= 0x10000;
-                str += String.fromCharCode(0xd800 + (code >> 10), 0xdc00 + (code & 0x03ff));
+                str = String.fromCharCode(0xd800 + (code >> 10), 0xdc00 + (code & 0x03ff));
             }
-        }
-        
-        return str;
+            return prev + str;
+        }, '');
     }
     
     EncUtils = {
-        strToUTF8: function(str, array) {
+        strToUTF8: function(str) {
             if (typeof str !== 'string') {
                 throw new TypeError('Not a string');
             }
@@ -190,7 +171,7 @@
                 }
             }
             
-            return (array === true) ? bytes : new Uint8Array(bytes);
+            return new Uint8Array(bytes);
         },
         utf8ToStr: function(bytes) {
             bytes = new Uint8Array(bytes);
@@ -252,45 +233,43 @@
             
             return str;
         },
-        strToUTF16BE: function(str, array) {
-            return strToUTF16(str, false, array);
+        strToUTF16BE: function(str) {
+            return strToUTF16(str, false);
         },
         utf16BEToStr: function(bytes) {
             return utf16ToStr(bytes);
         },
-        strToUTF16LE: function(str, array) {
-            return strToUTF16(str, true, array);
+        strToUTF16LE: function(str) {
+            return strToUTF16(str, true);
         },
         utf16LEToStr: function(bytes) {
             return utf16ToStr(bytes, true);
         },
-        strToUTF32BE: function(str, array) {
-            return strToUTF32(str, false, array);
+        strToUTF32BE: function(str) {
+            return strToUTF32(str);
         },
-        utf32BEToStr: function (bytes) {
+        utf32BEToStr: function(bytes) {
             return utf32ToStr(bytes);
         },
-        strToUTF32LE: function(str, array) {
-            return strToUTF32(str, true, array);
+        strToUTF32LE: function(str) {
+            return strToUTF32(str, true);
         },
         utf32LEToStr: function(bytes) {
             return utf32ToStr(bytes, true);
         },
         bytesToBase64: function(bytes) {
-            return btoa([].reduce.call(new Uint8Array(bytes), function(prev, cur) {
+            return btoa((new Uint8Array(bytes)).reduce(function(prev, cur) {
                 return prev + String.fromCharCode(cur);
             }, ''));
         },
-        base64ToBytes: function(str, array) {
+        base64ToBytes: function(str) {
             if (typeof str !== 'string') {
                 throw new TypeError('Not a string');
             }
             
-            var bytes = [].map.call(atob(str), function(el) {
+            return new Uint8Array([].map.call(atob(str), function(el) {
                 return el.charCodeAt(0);
-            });
-            
-            return (array === true) ? bytes : new Uint8Array(bytes);
+            }));
         }
     };
     
