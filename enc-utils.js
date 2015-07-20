@@ -43,11 +43,11 @@
         
         var buf = new ArrayBuffer(bytes.length),
             view = new DataView(buf);
-        (new Uint8Array(bytes)).forEach(function(el, i) {
+        [].forEach.call(new Uint8Array(bytes), function(el, i) {
             view.setUint8(i, el);
         });
         
-        var str = (new Uint16Array(buf)).reduce(function(prev, cur, i) {
+        var str = [].reduce.call(new Uint16Array(buf), function(prev, cur, i) {
             return prev + String.fromCharCode(view.getUint16(i * 2, littleEndian));
         }, '');
         
@@ -99,11 +99,11 @@
         
         var buf = new ArrayBuffer(bytes.length),
             view = new DataView(buf);
-        (new Uint8Array(bytes)).forEach(function(el, i) {
+        [].forEach.call(new Uint8Array(bytes), function(el, i) {
             view.setUint8(i, el);
         });
         
-        return (new Uint32Array(buf)).reduce(function(prev, cur, i) {
+        return [].reduce.call(new Uint32Array(buf), function(prev, cur, i) {
             var code = view.getUint32(i * 4, littleEndian === true),
                 str;
             
@@ -258,7 +258,7 @@
             return utf32ToStr(bytes, true);
         },
         bytesToBase64: function(bytes) {
-            return btoa((new Uint8Array(bytes)).reduce(function(prev, cur) {
+            return btoa([].reduce.call(new Uint8Array(bytes), function(prev, cur) {
                 return prev + String.fromCharCode(cur);
             }, ''));
         },
