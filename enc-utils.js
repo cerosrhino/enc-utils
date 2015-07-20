@@ -48,7 +48,7 @@
         });
         
         var str = [].reduce.call(new Uint16Array(buf), function(prev, cur, i) {
-            return prev + String.fromCharCode(view.getUint16(i * 2, littleEndian));
+            return prev + String.fromCharCode(view.getUint16(i * 2, littleEndian === true));
         }, '');
         
         if (utf16High.test(str)) {
