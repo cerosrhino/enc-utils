@@ -190,13 +190,15 @@
                     } else if ((bytes[i] & 0xf8) === 0xf0 && i < bytes.length - 3) {
                         code = bytes[i] & 0x07;
                         count = 3;
-                        if ((bytes[i] & 0x07) === 0)
+                        if ((bytes[i] & 0x07) === 0) {
                             overlongCheck = 0x30;
+                        }
                     } else if ((bytes[i] & 0xf0) === 0xe0 && i < bytes.length - 2) {
                         code = bytes[i] & 0x0f;
                         count = 2;
-                        if ((bytes[i] & 0x0f) === 0)
+                        if ((bytes[i] & 0x0f) === 0) {
                             overlongCheck = 0x10;
+                        }
                     } else if ((bytes[i] & 0xe0) === 0xc0 && (bytes[i] & 0x1e) !== 0 && i < bytes.length - 1) {
                         code = bytes[i] & 0x1f;
                         count = 1;
