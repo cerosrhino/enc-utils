@@ -75,11 +75,11 @@ article > p {
 	font-weight: bold;
 	text-align: center;
 }
-article a {
+article a, footer a {
 	color: #00f;
 	text-decoration: none;
 }
-article a:hover {
+article a:hover, footer a:hover {
 	text-decoration: underline;
 }
 #usage li:nth-child(odd) code {
