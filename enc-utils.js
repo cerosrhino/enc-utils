@@ -153,7 +153,7 @@
         return decodeURI([].reduce.call(
             new Uint8Array(bytes),
             function (prev, cur) {
-              return prev + '%' + cur.toString(16);
+              return prev + '%' + ('0' + cur.toString(16)).slice(-2);
             }, ''));
       } catch (e) {
         throw new Error('Invalid UTF-8 sequence');
@@ -206,4 +206,4 @@
   } else {
     window.EncUtils = EncUtils;
   }
-}());
+})();
