@@ -136,7 +136,7 @@
       try {
         return new Uint8Array(
             [].map.call(
-                encodeURI(str).replace(
+                encodeURIComponent(str).replace(
                     /%([0-9a-f]{2})/gi,
                     function (match, m1) {
                       return String.fromCharCode(parseInt(m1, 16));
@@ -150,7 +150,7 @@
     },
     utf8ToStr: function (bytes) {
       try {
-        return decodeURI([].reduce.call(
+        return decodeURIComponent([].reduce.call(
             new Uint8Array(bytes),
             function (prev, cur) {
               return prev + '%' + ('0' + cur.toString(16)).slice(-2);
